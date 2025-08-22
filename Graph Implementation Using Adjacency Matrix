@@ -1,0 +1,36 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int main() {
+  int n;
+  cin>>n;
+  cout<<"Enter Number of Nodes:"<<n;
+  cout<<endl;
+
+  int e;
+  cin>>e;
+  cout<<"Enter Number of Edges:"<<e;
+  cout<<endl;
+
+  vector<vector<int>> adjMat(n,vector<int>(n,0));
+
+  cout<<"Enter Input for Edges: "<<endl;
+  for(int i=0;i<e;i++){
+    int u,v;
+    cin>>u >> v;
+
+    adjMat[u][v] = 1;
+  }
+
+
+  for(auto vec:adjMat){
+      for(auto val:vec){
+        cout<<val<<" ";
+      }
+      cout<<endl;
+  }  
+
+  return 0;
+
+}
