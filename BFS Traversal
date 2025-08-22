@@ -1,0 +1,39 @@
+class Solution {
+  public:
+    
+    vector<int> bfs(int src,vector<vector<int>> &adj,vector<bool> &vis,vector<int>&ans){
+        
+        queue<int> q;
+        
+        q.push(src);
+        vis[src] = true;
+        
+        while(!q.empty()){
+            int fNode = q.front();
+            q.pop();
+            
+            ans.push_back(fNode);
+            for(auto nbr:adj[fNode]){
+                if(!vis[nbr]){
+                    q.push(nbr);
+                    vis[nbr]=true;
+                }
+            }
+        }
+        
+        return ans;
+    }
+    vector<int> bfs(vector<vector<int>> &adj) {
+        int n = adj.size();
+        vector<int> ans;
+        vector<bool> vis(n,false);
+        for(int i=0;i<n;i++){
+            if(!vis[i]){
+                bfs(i,adj,vis,ans);
+            }
+        }
+        
+        return ans;
+        
+    }
+};
