@@ -1,0 +1,92 @@
+#include <iostream>
+#include <unordered_map>
+#include <list>
+#include <queue>
+#include <stack>
+using namespace std;
+
+
+class Graph{
+    public:
+    unordered_map<int,list<int>> adj;
+
+    void addEdge(int u,int v,bool direction){
+      // 0->undirected
+      // 1-> dirrected
+
+      adj[u].push_back(v);
+      if(direction==0){
+        adj[v].push_back(u);
+      }
+    }
+
+    void printAdjList(){
+      for(auto node:adj){
+        cout<<node.first<<"->";
+        for(auto nbr:node.second){
+          cout<<nbr<<", ";
+        }
+        cout<<endl;
+      }
+    }
+
+   
+
+    void topoSortBFS(int n,vector<int>&ans){
+      queue<int> q;
+      unordered_map<int,int> indegree;
+
+      for(auto i:adj){
+        int src = i.first;
+        for(auto nbr:i.second){
+          indegree[nbr]++;
+        }
+      }
+
+      for(int i=0;i<n;i++){
+        if(indegree[i] == 0){
+          q.push(i);
+        }
+      }
+
+      while(!q.empty()){
+        int fNode = q.front();
+        q.pop();
+        ans.push_back(fNode);
+
+        for(auto nbr:adj[fNode]){
+          indegree[nbr]--;
+          if(indegree[nbr] == 0){
+            q.push(nbr);
+          }
+        }
+      }
+    }
+
+    
+};
+int main() {
+  
+  
+
+  Graph g2;
+  int n = 8;
+  g2.addEdge(0,1,1);
+  g2.addEdge(1,2,1);
+  g2.addEdge(2,3,1);
+  g2.addEdge(3,4,1);
+  g2.addEdge(3,5,1);
+  g2.addEdge(5,6,1);
+  g2.addEdge(4,6,1);
+  g2.addEdge(6,7,1);
+  vector<int> ans1;
+  g2.topoSortBFS(n,ans1);
+  cout<<"Printing Topsort Using BFS: ";
+  for(auto e:ans1) cout<<e<<" ";
+  cout<<endl;
+
+  
+
+
+  return 0;
+}
