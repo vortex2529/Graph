@@ -1,0 +1,53 @@
+class Solution {
+public:
+    void bfs(vector<vector<int>>& vec,vector<vector<int>>& vis,int r,int c){
+        int n = vec.size();
+        int m = vec[0].size();
+        int dr[]={-1,0,1,0};
+        int dc[]={0,1,0,-1};
+
+        queue<pair<int,int>>q;
+        q.push({r,c});
+        vis[r][c] = 1;
+
+        while(!q.empty()){
+            int nr = q.front().first;
+            int nc = q.front().second;
+            q.pop();
+
+            for(int i=0;i<4;i++){
+                int nrow=nr+dr[i];
+                int ncol=nc+dc[i];
+
+                if(nrow>=0 && nrow<n && ncol>=0 && ncol<m &&  !vis[nrow][ncol] && vec[nrow][ncol]==1){
+                    q.push({nrow,ncol});
+                    vis[nrow][ncol] = 1;
+                }
+            }
+        }
+    }
+    int numEnclaves(vector<vector<int>>& grid) {
+        int n = grid.size();
+        int m = grid[0].size();
+        vector<vector<int>> vec = grid;
+        vector<vector<int>> vis(n,vector<int>(m,0));
+
+        for(int i=0;i<n;i++){
+            if(vec[i][0] == 1 && !vis[i][0]) bfs(vec,vis,i,0);
+            if(vec[i][m-1] == 1 && !vis[i][m-1]) bfs(vec,vis,i,m-1);
+        } 
+
+        for(int j=0;j<m;j++){
+            if(vec[0][j] == 1 && !vis[0][j]) bfs(vec,vis,0,j);
+            if(vec[n-1][j] == 1 && !vis[n-1][j]) bfs(vec,vis,n-1,j);
+        }
+
+        int cnt = 0;
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                if(vec[i][j] == 1 && !vis[i][j]) cnt++;
+            }
+        }
+        return cnt;
+    }
+};
