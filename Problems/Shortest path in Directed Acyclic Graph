@@ -1,0 +1,59 @@
+// User function Template for C++
+class Solution {
+   private: 
+    void toposortDFS(int src,vector<bool>&vis,stack<int>&st,vector<pair<int,int>> adj[]){
+        vis[src] = true;
+        for(auto nbr:adj[src]){
+            if(!vis[nbr.first]){
+                toposortDFS(nbr.first,vis,st,adj);
+            }
+        }
+        st.push(src);
+    }
+    vector<int> shortestPathDAG(int src,int n,vector<pair<int,int>> adj[]){
+        vector<bool> vis(n,false);
+        stack<int> st;
+        for(int i=0;i<n;i++){
+            if(!vis[i]) toposortDFS(i,vis,st,adj);
+        }
+        
+        vector<int>dist(n,INT_MAX);
+        dist[src] = 0;
+        
+        while(!st.empty()){
+            int topElem = st.top();
+            st.pop();
+            
+            if(dist[topElem] != INT_MAX){
+                for(auto nbr:adj[topElem]){
+                    if(dist[topElem]+nbr.second < dist[nbr.first]){
+                        dist[nbr.first] = dist[topElem]+nbr.second;
+                    }
+                }
+            }
+        }
+        
+        return dist;
+        
+    }
+  
+  public:
+    vector<int> shortestPath(int n, int E, vector<vector<int>>& edges) {
+        vector<pair<int,int>> adj[n];
+        
+        for(auto it:edges){
+            int u = it[0];
+            int v = it[1];
+            int wt = it[2];
+            adj[u].push_back({v,wt});
+        }
+        
+        
+        vector<int> dist = shortestPathDAG(0,n,adj);
+        for(int i=0;i<n;i++){
+            if(dist[i] == INT_MAX) dist[i] = -1;
+        }
+        return dist;
+        
+    }
+};
