@@ -1,0 +1,35 @@
+class Solution {
+  public:
+    
+    void dfs(int row,int col,vector<vector<char>>& grid,vector<vector<char>>& vis,int n,int m,int dr[],int dc[]){
+        vis[row][col] = 'o';
+        for(int i=0;i<8;i++){
+            int nr = row + dr[i];
+            int nc = col + dc[i];
+            
+            if(nr>=0 && nr<n && nc>=0 && nc<m && vis[nr][nc] == 'x'&& grid[nr][nc] == 'L'){
+                dfs(nr,nc,grid,vis,n,m,dr,dc);
+            }
+        }
+    }
+    int countIslands(vector<vector<char>>& grid) {
+        int n = grid.size();
+        int m = grid[0].size();
+        
+        vector<vector<char>> vis(n,vector<char>(m,'x'));
+        int count = 0;
+        int dr[] = {-1,-1,-1,0,1,1,1,0};
+        int dc[] = {-1,0,1,1,1,0,-1,-1};
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                if(vis[i][j] == 'x' && grid[i][j] == 'L'){
+                    dfs(i,j,grid,vis,n,m,dr,dc);
+                    count++;
+                }
+                
+            }
+        }
+        return count++;
+        
+    }
+};
