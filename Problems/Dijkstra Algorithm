@@ -1,0 +1,43 @@
+// User Function Template
+class Solution {
+  public:
+    vector<int> dijkstra(int n, vector<vector<int>> &edges, int src) {
+        vector<pair<int,int>> adj[n];
+        
+        for(auto e:edges){
+            int u = e[0],v=e[1],w=e[2];
+            adj[u].push_back({v,w});
+            adj[v].push_back({u,w});
+        }
+        
+        set<pair<int,int>> st;
+        vector<int>dist(n,INT_MAX);
+        
+        st.insert({0,src});
+        dist[src] = 0;
+        
+        while(!st.empty()){
+            auto data = *st.begin();
+            st.erase(st.begin());
+            int nodeDist = data.first;
+            int node = data.second;
+            
+            for(auto nbr:adj[node]){
+                if(dist[node] + nbr.second < dist[nbr.first]){
+                    
+                    if(dist[nbr.first] != INT_MAX){
+                        st.erase({dist[nbr.first],nbr.first});
+                    }
+                    
+                    
+                    dist[nbr.first] = dist[node] + nbr.second;
+                    
+                    pair<int,int> p(dist[nbr.first],nbr.first);
+                    st.insert(p);
+                }
+            }
+        }
+        return dist;
+        
+    }
+};
