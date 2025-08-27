@@ -1,0 +1,42 @@
+class Solution {
+public:
+    bool dfs(int node,vector<bool> &vis,vector<bool> &dfsVis,vector<int>adj[],vector<int>&ans){
+        vis[node] = true;
+        dfsVis[node] = true;
+       
+        for(auto nbr:adj[node]){
+            if(!vis[nbr]){
+                if(dfs(nbr,vis,dfsVis,adj,ans) == false) return false;
+            }
+            else{
+                if(dfsVis[nbr]==true) return false;
+            }
+        }
+        dfsVis[node] = false;
+         ans.push_back(node);
+        return true;
+    }
+    vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {
+        int n = numCourses;
+        vector<int> adj[n];
+        for(auto e: prerequisites){
+            int u = e[0];
+            int v = e[1];
+            
+            adj[v].push_back(u);
+        }
+        vector<int> ans;
+        vector<bool>dfsVis(n,false);
+        vector<bool> vis(n,false);
+        for(int i=0;i<n;i++){
+            if(!vis[i]){
+                if(dfs(i,vis,dfsVis,adj,ans) == false){
+                    break;
+                }
+            }
+        }
+        if(ans.size() < n) return {};
+        reverse(ans.begin(),ans.end());
+        return ans;
+    }
+};
