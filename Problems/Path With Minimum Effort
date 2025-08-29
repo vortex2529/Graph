@@ -1,0 +1,48 @@
+
+class Solution {
+using P = pair<int, pair<int,int>>;
+using PQ = priority_queue<P, vector<P>, greater<P>>;   
+    
+  public:
+    int MinimumEffort(int rows, int columns, vector<vector<int>> &mat) {
+        int n = rows;
+        int m = columns;
+        vector<vector<int>> dist(n,vector<int> (m,INT_MAX));
+
+        PQ pq;
+        pq.push({0,{0,0}});
+        dist[0][0] = 0;
+
+        int dr[] = {-1,0,1,0};
+        int dc[] = {0,1,0,-1};
+        while(!pq.empty()){
+            auto data = pq.top();
+            pq.pop();
+
+            int d = data.first;
+            int x = data.second.first;
+            int y = data.second.second;
+            
+            if(x==n-1 && y==m-1){
+                return dist[x][y];
+            }    
+            for(int i=0;i<4;i++){
+                int nrow = x+dr[i];
+                int ncol = y+dc[i];
+
+                if(nrow>=0 && nrow<mat.size() && ncol>=0 && ncol<mat[0].size()){
+                    int currD = abs(mat[x][y] - mat[nrow][ncol]);
+                    int newMax = max(d,currD);
+                    if(newMax <dist[nrow][ncol]){
+                        dist[nrow][ncol]=newMax;
+                        pq.push({newMax,{nrow,ncol}});
+                    } 
+                   
+                }
+            }
+        }
+
+        return 0;
+        
+    }
+};
