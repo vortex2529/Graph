@@ -1,0 +1,40 @@
+// User function Template for C++
+
+class Solution {
+  private:
+    bool dfs(int src,vector<bool> &vis,vector<bool>&dfsVis,vector<bool> &check,vector<int> adj[]){
+        vis[src] = true;
+        dfsVis[src] = true;
+        check[src] = false;
+        for(auto nbr:adj[src]){
+            if(!vis[nbr]){
+                bool ans = dfs(nbr,vis,dfsVis,check,adj);
+                if(ans == true) return true;
+            }
+            else if(dfsVis[nbr] == true) return true;
+        }
+        check[src] = true;
+        dfsVis[src] = false;
+        return false;
+        
+    }
+  public:
+    vector<int> eventualSafeNodes(int V, vector<int> adj[]) {
+        
+        vector<int> ans;
+        vector<bool> vis(V,false);
+        vector<bool> dfsVis(V,false);
+        vector<bool> check(V,false);
+        for(int i=0;i<V;i++){
+            if(!vis[i]){
+                dfs(i,vis,dfsVis,check,adj);
+            }
+        }
+        
+        for(int i=0;i<V;i++){
+            if(check[i] == true) ans.push_back(i);
+        }
+        
+        return ans;
+    }
+};
