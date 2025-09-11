@@ -1,0 +1,62 @@
+class Solution {
+  #define P pair<int,int>
+  #define PQ priority_queue<P,vector<P>,greater<P>>    
+    
+  public:
+    vector<int> shortestPath(int n, int m, vector<vector<int>>& edges) {
+        
+        
+        vector<vector<int>> adj[n+1];
+        
+        for(auto e:edges){
+            int u = e[0],v=e[1],w=e[2];
+            adj[u].push_back({v,w});
+            adj[v].push_back({u,w});
+        }
+        
+        vector<int> dist(n+1,1e9);
+        vector<int> parent(n+1,-1);
+        
+        vector<int> path;
+        
+        PQ pq;
+        
+        pq.push({0,1});
+        dist[1] = 0;
+        parent[1] = -1;
+        
+        while(!pq.empty()){
+            int dis = pq.top().first;
+            int node = pq.top().second;
+            pq.pop();
+            
+            for(auto it:adj[node]){
+                int edgeWt = it[1];
+                int nbr = it[0];
+                
+                if(dis + edgeWt < dist[nbr]){
+                    dist[nbr] = dis + edgeWt;
+                    pq.push({dist[nbr],nbr});
+                    parent[nbr] = node;
+                }
+            }
+        }
+        
+        
+        if(dist[n] != 1e9){
+            path.push_back(dist[n]);
+            int node = n;
+            
+            while(node != -1){
+                path.push_back(node);
+                node = parent[node];
+            }
+            reverse(path.begin()+1,path.end());
+            return path;
+        }
+        else{
+            return {-1};
+        }
+        
+    }
+};
