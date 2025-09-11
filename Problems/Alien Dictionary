@@ -1,0 +1,71 @@
+class Solution {
+  
+    
+  public:
+    string findOrder(vector<string> &words) {
+       vector<vector<int>> adj(26);
+       vector<bool> exist(26,false);
+       vector<int>indegree(26,0);
+       
+       for(auto str:words){
+           for(auto c:str){
+               exist[c-'a'] = true;
+           }
+       }
+       
+       for(int i=0;i<words.size()-1;i++){
+           string a = words[i];
+           string b = words[i+1];
+           int len = min(a.length(),b.length());
+           int j=0;
+           while(a[j] == b[j]){
+               j++;
+           }
+           
+           if(j<len){
+               int u = a[j]-'a';
+               int v = b[j]-'a';
+               
+               adj[u].push_back(v);
+               indegree[v]++;
+           }
+           else if(a.length() > b.length()){
+               return "";
+           }
+
+       }
+       
+       queue<int> q;
+        
+        for(int i=0;i<26;i++){
+            if(exist[i] && indegree[i] == 0) q.push(i);
+        }
+       
+       
+       string ans = "";
+       
+       while(!q.empty()){
+           int node = q.front();q.pop();
+           ans += char(node+'a');
+           
+           for(auto nbr:adj[node]){
+               indegree[nbr]--;
+               if(indegree[nbr]==0) q.push(nbr);
+           }
+       }
+       
+       
+    //   final cycle check
+       for(int i=0;i<26;i++){
+           if(exist[i] && indegree[i] != 0){
+               return "";
+           }
+       }
+       
+       return ans;
+       
+       
+       
+        
+    }
+};
