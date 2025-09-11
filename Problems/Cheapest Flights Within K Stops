@@ -1,0 +1,40 @@
+class Solution {
+#define P pair<int,pair<int,int>> 
+  public:
+    int CheapestFLight(int n, vector<vector<int>>& flights, int src, int dst, int K) {
+        vector<vector<pair<int,int>>> adj(n);
+        for (auto &e : flights) {
+            adj[e[0]].push_back({e[1], e[2]});
+        }
+        
+        queue<P> q;;
+        q.push({0,{src,0}});
+        
+        vector<int> dist(n,1e9);
+        dist[src] = 0;
+        
+        while(!q.empty()){
+            auto top = q.front();
+            q.pop();
+            int stops = top.first;
+            int node = top.second.first;
+            int cost = top.second.second;
+            
+            if(stops > K) continue;
+            for(auto it:adj[node]){
+                int nbr = it.first;
+                int wt = it.second;
+                
+                if(cost + wt < dist[nbr] && stops<=K){
+                    dist[nbr] = cost +wt;
+                    q.push({stops+1,{nbr,cost+wt}});
+                }
+                
+            }
+        }
+        
+        if(dist[dst] == 1e9) return -1;
+        return dist[dst];
+        
+    }
+};
