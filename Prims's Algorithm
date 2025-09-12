@@ -1,0 +1,43 @@
+class Solution {
+  public:
+    int spanningTree(int V, vector<vector<int>>& edges) {
+        vector<pair<int,int>> adj[V];
+        
+        for(auto e:edges){
+            adj[e[0]].push_back({e[1],e[2]});
+            adj[e[1]].push_back({e[0],e[2]});
+        }
+        
+        int sum = 0;
+        vector<bool> vis(V,false);
+        vector<vector<int>> mst;
+        priority_queue<pair<int,pair<int,int>>,vector<pair<int,pair<int,int>>>,greater<pair<int,pair<int,int>>>> pq;
+        pq.push({0,{0,-1}});
+        
+        
+        while(!pq.empty()){
+            int dis = pq.top().first;
+            int node = pq.top().second.first;
+            int parent = pq.top().second.second;
+            pq.pop();
+            
+            if(vis[node]) continue; 
+            vis[node] = true;
+            if(parent != -1){
+                sum += dis;
+                mst.push_back({node,parent});
+            }
+            for(auto it:adj[node]){
+                int nbr = it.first;
+                int wt = it.second;
+                
+                if(!vis[nbr]){
+                    pq.push({wt,{nbr,node}});
+                }
+            }
+            
+        }
+        return sum;
+        
+    }
+};
