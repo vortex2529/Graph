@@ -1,0 +1,91 @@
+// User function Template for C++
+class DSU{
+
+public:
+    vector<int> size,parent;
+    DSU(int n){
+        size.resize(n+1,0);
+        parent.resize(n+1);
+        for(int i=0;i<=n;i++){
+            parent[i]=i;
+        }
+    }
+
+    int find(int node){
+        if(node == parent[node]){
+            return node;
+        }
+        return parent[node] = find(parent[node]);
+    }    
+
+    void unionBySize(int u,int v){
+        int pu = find(u);
+        int pv = find(v);
+
+        if(pu == pv) return;
+
+        if(size[pu] < size[pv]){
+            parent[pu] = pv;
+            size[pv] += size[pu];
+        }
+        else{
+            parent[pv] = pu;
+            size[pu] += pv;
+
+        }
+    }
+};
+class Solution {
+  private:
+    bool isValid(int r,int c,int n,int m){
+        if(r>=0 && r<n && c >=0 && c < m) return true;
+        
+        return false;
+    }
+  public:
+    vector<int> numOfIslands(int n, int m, vector<vector<int>> &A) {
+        vector<int> ans;
+        DSU ds(n*m);
+        int vis[n][m];
+        memset(vis,0,sizeof vis);
+        int cnt =0;
+        
+        int dr[] = {-1,0,1,0};
+        int dc[] = {0,1,0,-1};
+        for(auto it:A){
+            int row = it[0];
+            int col = it[1];
+            
+            if(vis[row][col] == 1){
+                ans.push_back(cnt);
+                continue;
+            }
+            vis[row][col] = 1;
+            cnt++;
+            
+            for(int i=0;i<4;i++){
+                int adjr = row + dr[i];
+                int adjc = col + dc[i];
+                if(isValid(adjr,adjc,n,m)){
+                    if(vis[adjr][adjc] == 1){
+                        int nodeNo = row * m + col;
+                        int adjNodeNo = adjr * m + adjc;
+                        
+                        if(ds.find(nodeNo) != ds.find(adjNodeNo)){
+                            cnt--;
+                            ds.unionBySize(nodeNo, adjNodeNo);
+                        }
+                    }
+                }
+            }
+            
+            ans.push_back(cnt);
+            
+            
+        }
+        
+ 
+        return ans;
+        
+    }
+};
